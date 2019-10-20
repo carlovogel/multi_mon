@@ -75,7 +75,6 @@ class SettingsMainWindow(QtWidgets.QDialog):
                 config.add_section(section)
         return config
 
-
     @staticmethod
     def get_connected_screen_infos():
         """Returns a dict with all connected ports as keys and dictionaries as values,
@@ -238,7 +237,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
 
     def make_mode_selection_layout(self):
         """Creates and places the radio buttons for the mode selection and the label next to it.
-        Returns a tuple of the left and the right radio button.
+        Returns a tuple of the left and the right radio button widget.
         """
         horizontal_layout_mode = QtWidgets.QHBoxLayout()
         horizontal_layout_mode.setContentsMargins(10, 10, 10, 10)
@@ -271,7 +270,8 @@ class SettingsMainWindow(QtWidgets.QDialog):
         return radio_button_left_mode, radio_button_right_mode
 
     def make_button_box(self):
-        """Create and place the buttons 'Start MultiMon', 'Customize MultiMon', 'Exit' and 'Apply'.
+        """Creates and places the buttons 'Start MultiMon', 'Customize MultiMon', 'Exit' and 'Apply' and connects them
+        to their related methods.
         """
         horizontal_layout_button_box = QtWidgets.QHBoxLayout()
         horizontal_layout_button_box.setSpacing(20)
@@ -339,7 +339,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
         return menu_entries_tuple
 
     def load_values_from_config_to_gui(self):
-        """Load all the values from the config parser to the related default values of the GUI.
+        """Loads all the values from the config parser to the related default values of the GUI.
         """
         tuple_ports = tuple(self.connected_ports_dict)
         tuple_port_labels = self.get_more_detailed_port_tuple(tuple(self.connected_ports_dict))
@@ -370,8 +370,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
 
     @staticmethod
     def get_more_detailed_port_tuple(port_tuple):
-        """Method to add the model and the manufacturer to the
-        tuple of ports for the active screens using QT5 methods.
+        """Adds the model and the manufacturer to the tuple of ports for the active screens using QT5 methods.
         Returns more detailed tuple for given port tuple.
         """
         list_active_screens = QtWidgets.QApplication.screens()
@@ -385,8 +384,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
         return tuple_port_label
 
     def disable_middle_screen_if_two_screens(self):
-        """Disables middle screen GUI elements if there are only two screens.
-        Disables right screen GUI elements if there is only one screen.
+        """Disables middle screen GUI elements if there are less then three screens.
         """
         if self.screen_count < 3:
             self.widget_dict_tuple[1]['frame'].setDisabled(True)
@@ -434,13 +432,12 @@ class SettingsMainWindow(QtWidgets.QDialog):
             pass
 
     def set_screen_type(self, screen_nr, screen_type):
-        """Change label, icon and menu default value for the given screen_nr to the given screen type.
+        """Changes label, icon and menu default value for the given screen_nr to the given screen type.
         """
         try:
             self.widget_dict_tuple[screen_nr]['type_menu'].setDefaultAction(self.action_tuple[screen_nr][screen_type])
             self.widget_dict_tuple[screen_nr]['type_button'].setIcon(TYPE_DICT[screen_type][0])
             self.widget_dict_tuple[screen_nr]['type_label'].setText(TYPE_DICT[screen_type][1])
-
         except KeyError:
             pass
 
@@ -462,14 +459,14 @@ class SettingsMainWindow(QtWidgets.QDialog):
                     self.set_screen_type(screen_nr, screen_type)
 
     def reload_window(self):
-        """Refresh the window with a new scan of all connected ports.
+        """Reloads the window with a new scan of all connected ports.
         """
         self.close()
         settings_main_new = SettingsMainWindow(self)
         settings_main_new.show()
 
     def start_multi_mon(self):
-        """Save the settings and open MultiMon.
+        """Saves the settings and opens MultiMon.
         """
         if not self.apply_changes_and_exit():
             return False
@@ -478,7 +475,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
         start_multi_mon.showFullScreen()
 
     def open_customize_window(self):
-        """Save the settings and open the Customize Window.
+        """Saves the settings and opens the Customize Window.
         Returns False, if settings the settings are incorrect.
         """
         if not self.save_all_values_in_config():
@@ -487,7 +484,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
         customize_window.show()
 
     def save_mode_in_config(self):
-        """Save the side selection ('left' / 'right') of the mode radio buttons in the config parser.
+        """Saves the side selection ('left' / 'right') of the mode radio buttons in the config parser.
         """
         if self.mode_radio_button_tuple[0].isChecked():
             self.config['Mode']['edge'] = 'left'
@@ -496,16 +493,16 @@ class SettingsMainWindow(QtWidgets.QDialog):
 
     def save_all_values_in_config(self):
         """Saves all the values in the config parser.
-        Return True, if successful - Returns False and opens warning window, if not.
+        Returns True, if successful - Returns False and opens warning window, if not.
         """
         selected_values_dict = self.get_all_values_from_widgets()
         if not self.check_if_all_settings_correct(selected_values_dict['type'], selected_values_dict['port']):
             return False
-        tv_count = selected_values_dict['type'].count('tv')
-        if self.check_if_setup_changed(self.screen_count, tv_count):
-            self.tv_count = tv_count
+        new_tv_count = selected_values_dict['type'].count('tv')
+        if self.check_if_setup_changed(self.screen_count, new_tv_count):
+            self.tv_count = new_tv_count
             self.set_default_button_selection()
-        self.config['Screens']['tv_count'] = str(tv_count)
+        self.config['Screens']['tv_count'] = str(new_tv_count)
         self.config['Screens']['screen_count'] = str(self.screen_count)
         selected_values_dict['type'] = self.rename_double_screen_types(selected_values_dict['type'])
         for screen_nr in range(self.screen_count if self.screen_count > 2 else 3):
@@ -552,20 +549,21 @@ class SettingsMainWindow(QtWidgets.QDialog):
             return False
         return True
 
-    def check_if_setup_changed(self, screen_count, tv_count):
-        """Returns True if either the screen count or the tv count has changed. Returns False if not.
+    def check_if_setup_changed(self, screen_count, new_tv_count):
+        """Returns True if either the screen count or the tv count is different then the value loaded from the config 
+        parser. Returns False if they haven't changed.
         """
         try:
-            screen_count = (self.config['Screens']['screen_count'])
+            old_screen_count = (self.config['Screens']['screen_count'])
         except KeyError:
-            screen_count = 0
-        if screen_count != screen_count or self.tv_count != tv_count:
+            old_screen_count = 0
+        if old_screen_count != screen_count or self.tv_count != new_tv_count:
             return True
         else:
             return False
 
     def set_default_button_selection(self):
-        """Set the button selection to the default selection:
+        """Sets the button selection to the default selection:
         Three-screens-mode: First 6 buttons
         Two-screens-mode: All buttons
         """
@@ -581,20 +579,14 @@ class SettingsMainWindow(QtWidgets.QDialog):
             self.config['Customize'][label] = 'False'
         self.config['Customize']['button_count'] = str(button_count)
 
-    def apply_changes(self):
-        """Saves all settings in the config parser and writes the config parser to the conf file.
+    def apply_changes_and_exit(self):
+        """Saves all the settings in the config parser, writes the config parser to the conf file and closes the main 
+        window. Returns True if successful, False if not.
         """
         if not self.save_all_values_in_config():
             return False
         with CONF_FILE.open('w') as conf_file:
             self.config.write(conf_file)
-        return True
-
-    def apply_changes_and_exit(self):
-        """Saves the settings in the conf file and closes the program.
-        """
-        if not self.apply_changes():
-            return False
         self.close()
         return True
 
@@ -607,7 +599,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
 
     @staticmethod
     def rename_double_screen_types(screen_types_tuple):
-        """If there are more then one tv or secondary screens, add '_2','_3', etc. to the related screen type names.
+        """If there are more then one tv or secondary screens, adds '_2','_3',...,_n to the related screen type names.
         Takes tuple of screen_types. Returns tuple of renamed screen types.
         """
         new_screen_types_tuple = ()
@@ -643,8 +635,8 @@ class CustomizeWindow(QtWidgets.QDialog):
         self.make_bottom_button_box()
 
     def make_check_buttons(self):
-        """Initialize and place the selection buttons. Return a dict with all available buttons depending on the setup
-        chosen in the main settings window as values and their labels as keys.
+        """Initializes and places the selection buttons. Returns a dict with all available buttons depending on the
+        setup chosen in the main settings window as values and their labels as keys.
         """
         grid_layout_selection = QtWidgets.QGridLayout()
         grid_layout_selection.setSpacing(20)
@@ -653,21 +645,22 @@ class CustomizeWindow(QtWidgets.QDialog):
         type_list = [self.config['Screens'][f'type_screen_{screen_nr}']
                      for screen_nr in range(screen_count if screen_count > 2 else 3)]
         icon_width, icon_height = MultiMon.define_icon_size(screen_count, tv_count, type_list)
-        label_tooltip_dict = self.make_button_dict(screen_count, tv_count)
+        name_tooltip_dict = self.make_button_dict(screen_count, tv_count)
         button_dict = {}
         icon_dir = MultiMon.get_icon_dir_name(screen_count, type_list)
         row = 0
         column = 0
-        for label, tooltip in label_tooltip_dict.items():
-            button_dict[label] = QtWidgets.QPushButton(self)
-            button_dict[label].setMinimumSize(QSize(300, 180))
-            button_dict[label].setCursor(QCursor(Qt.PointingHandCursor))
-            button_dict[label].setIconSize(QSize(icon_width, icon_height))
-            button_dict[label].setCheckable(True)
-            grid_layout_selection.addWidget(button_dict[label], row, column,  1, 1)
-            button_dict[label].setIcon(QIcon(str(icon_dir / f'{label}.svg')))
-            button_dict[label].setToolTip(tooltip)
-            button_dict[label].setChecked(self.config.getboolean('Customize', label))
+        for name, tooltip in name_tooltip_dict.items():
+            button = QtWidgets.QPushButton(self)
+            button.setMinimumSize(QSize(300, 180))
+            button.setCursor(QCursor(Qt.PointingHandCursor))
+            button.setIconSize(QSize(icon_width, icon_height))
+            button.setCheckable(True)
+            grid_layout_selection.addWidget(button, row, column,  1, 1)
+            button.setIcon(QIcon(str(icon_dir / f'{name}.svg')))
+            button.setToolTip(tooltip)
+            button.setChecked(self.config.getboolean('Customize', name))
+            button_dict[name] = button
             column += 1
             if column == 2:
                 column = 0
@@ -677,7 +670,7 @@ class CustomizeWindow(QtWidgets.QDialog):
 
     @staticmethod
     def make_button_dict(screen_count, tv_count):
-        """Returns a dictionary with the labels of all possible buttons for the selected setup as keys
+        """Returns a dictionary with the names of all possible buttons for the selected setup as keys
         and the related tooltips as values. Takes the screen count and the tv count as arguments.
         """
         tool_tips_tuple = (
@@ -686,21 +679,21 @@ class CustomizeWindow(QtWidgets.QDialog):
             'Secondary monitor only', 'Secondary 2 monitor only', 'Extended on secondary 2 monitor',
             'Mirror on secondary 2 monitor', 'TV 2 only', 'Extended on TV 2', 'Mirror on TV 2'
                            )
-        label_tooltip_dict = {}
+        name_tooltip_dict = {}
         if screen_count >= 3:
             exclude_tuple = ('tv', '2', 'secondary')
             for label, tooltip in zip(BUTTON_LABEL_TUPLE, tool_tips_tuple):
                 if exclude_tuple[tv_count] not in label:
-                    label_tooltip_dict[label] = tooltip
+                    name_tooltip_dict[label] = tooltip
         else:
             include_tuple = ('secondary', 'tv')
             for label, tooltip in zip(BUTTON_LABEL_TUPLE, tool_tips_tuple):
                 if 'main' in label or (include_tuple[tv_count] in label and '2' not in label):
-                    label_tooltip_dict[label] = tooltip
-        return label_tooltip_dict
+                    name_tooltip_dict[label] = tooltip
+        return name_tooltip_dict
 
     def make_bottom_button_box(self):
-        """Create and place the ok and cancel buttons on the bottom.
+        """Creates and places the ok and cancel buttons on the bottom.
         """
         horizontal_layout = QtWidgets.QHBoxLayout()
         horizontal_layout.setSpacing(20)
@@ -723,11 +716,11 @@ class CustomizeWindow(QtWidgets.QDialog):
         push_button_ok.setProperty('bottom', True)
         horizontal_layout.addWidget(push_button_ok)
         self.vertical_layout.addLayout(horizontal_layout)
-        push_button_ok.clicked.connect(self.save_selection)
+        push_button_ok.clicked.connect(self.save_selection_and_exit)
         push_button_cancel.clicked.connect(self.close)
 
-    def save_selection(self):
-        """Saves the button states in the config parser.
+    def save_selection_and_exit(self):
+        """Saves the button states in the config parser and closes the window.
         """
         button_count = 0
         for label in BUTTON_LABEL_TUPLE:
