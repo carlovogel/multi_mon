@@ -95,7 +95,6 @@ class MultiMon(QtWidgets.QDialog):
         icon_width, icon_height = self.define_icon_size(self.screen_count, self.tv_count, self.type_list)
         button_dict = {}
         for index, label in enumerate(button_tuple):
-            print(self.config['Customize'][label])
             if self.config.getboolean('Customize', label):
                 push_button = QtWidgets.QPushButton(vertical_frame)
                 push_button.setSizePolicy(size_policy)
@@ -465,8 +464,6 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     tool = MultiMon()
     tool.showFullScreen()
-    stop = time.time()
-    print(stop - start)
     sys.exit(app.exec_())
 
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*
 
-import time
 import sys
 import subprocess
 import configparser
@@ -10,7 +9,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QCursor, QFont
 from multi_mon import MultiMon
-start = time.time()
 
 CONF_FILE = Path(__file__).parent / 'multi_mon_conf.conf'
 ICONS_DIR = Path(__file__).parent / 'icons'
@@ -75,7 +73,6 @@ class SettingsMainWindow(QtWidgets.QDialog):
         if not config.read(CONF_FILE):
             for section in ('Screens', 'Mode', 'Customize'):
                 config.add_section(section)
-        print(config)
         return config
 
 
@@ -772,8 +769,6 @@ def main():
     app.setStyle(my_style)
     main.settings_main = SettingsMainWindow()
     main.settings_main.show()
-    stop = time.time()
-    print(stop-start)
     sys.exit(app.exec_())
 
 
