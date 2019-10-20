@@ -533,19 +533,19 @@ class SettingsMainWindow(QtWidgets.QDialog):
         Returns True, if all settings are correct.
         """
         if 'main' not in selected_screen_type_tuple:
-            self.open_warning_window('You need to select at least one main screen')
+            self.open_warning_window('You need to select at least one main screen.')
             return False
 
         elif selected_screen_type_tuple.count('main') > 1:
-            self.open_warning_window('Only one main screen')
+            self.open_warning_window('Only one main screen.')
             return False
 
         elif len(tuple(filter(bool, selected_screen_type_tuple))) != self.screen_count:
-            self.open_warning_window('You need to select the screen type for each screen')
+            self.open_warning_window('You need to select the screen type for each screen.')
             return False
 
         elif len(selected_port_tuple) != len(set(selected_port_tuple)):
-            self.open_warning_window('Incorrect port selection. You need to select a different port each screen')
+            self.open_warning_window('Incorrect port selection. You need to select a different port each screen.')
             return False
         return True
 
@@ -612,7 +612,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
     def one_screen_warning(self):
         """Opens warning window, if only one screen is connected.
         """
-        self.open_warning_window('You need at least two connected screens to use MultiMon')
+        self.open_warning_window('You need at least two connected screens to use MultiMon.')
 
 
 class CustomizeWindow(QtWidgets.QDialog):
