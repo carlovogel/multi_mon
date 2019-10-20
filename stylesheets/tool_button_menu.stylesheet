@@ -1,0 +1,44 @@
+QMenu{
+    background-color: black;
+    color: white;
+    border:none
+      }
+
+
+QMenu::item{
+    height: 50px;
+    width: 293px;
+    background-color: black;
+    color: white;
+    padding:30px;
+    padding-left:35px;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgb(35,35,35);
+    font: "Noto Sans";
+    font-size: 24px;
+            }
+
+QMenu::item:selected{
+    margin:1px;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, 
+                                      stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626); 
+                     }
+
+QMenu::item:default{
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, 
+                                      stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626); 
+                     }
+
+QMenu::icon {
+    padding-left: 20px;
+             }

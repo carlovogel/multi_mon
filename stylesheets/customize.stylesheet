@@ -1,0 +1,59 @@
+QWidget{
+    border-style: outset; 
+    border-radius: 3px; 
+    border-width: 1px;
+        }
+
+QVBoxLayout{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.2 #050505, stop: 0.3 #101010, stop: 0.7 #101010, stop: 0.8 #050505, stop: 1 #000000);
+        }
+
+QPushButton{
+    background-color: transparent;
+    border-color: rgb(30,30,30); 
+            }
+
+QPushButton:hover{
+    margin: 1px; 
+    border-color: white; 
+    background-color: transparent;
+                  }
+
+QPushButton:checked{
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, 
+                                      stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626)
+                    }
+
+QPushButton:pressed{
+    margin: 2px; 
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, 
+                                      stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626)
+                    }
+
+QPushButton:checked:pressed{
+    margin: 2px; 
+    border-color: white;
+    background-color: black;
+                    }
+
+QPushButton[bottom=true]{
+    background-color: black;
+    border-color:rgb(115, 115, 115);
+            }
+
+QPushButton[bottom=true]:hover{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
+    border-color: white;
+    margin: 1px;
+                               }
+
+QToolTip{ 
+    background-color: black;
+    border-color: rgb(35, 35, 35);
+    padding: 2px;
+    color: white; 
+    font: "Noto Sans";
+    font-size: 14px;
+         }

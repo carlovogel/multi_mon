@@ -1,0 +1,62 @@
+QWidget{
+    background-color: #000000;
+    border:none;
+    outline:none
+
+        }
+
+QToolTip { 
+    background-color: black; 
+    color: white; 
+    font: "Noto Sans";
+    font-size: 18px;
+    padding: 2px;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: white;
+          }
+
+QPushButton{
+    background-color: #000000;
+    border: none
+            }
+
+QPushButton:hover{
+    margin: 1px;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626)
+                  }
+
+
+QPushButton:focus{
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px; 
+    border-color: rgb(135,135,135);
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626)
+                        }
+
+QPushButton:focus:hover{
+    margin: 1px;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px; 
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626)
+                        }
+
+
+QPushButton:focus:hover:pressed{
+    margin: 1px;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 2px;
+    border-color: white;
+    background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.2 #050505, stop: 0.95 #121212, stop: 1 #262626)
+                  }
+
+

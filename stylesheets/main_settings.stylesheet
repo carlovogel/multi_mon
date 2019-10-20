@@ -1,0 +1,101 @@
+QWidget{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.1 #050505, stop: 0.5 #101010, stop: 0.9 #050505, stop: 1 #000000);
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color:rgb(35, 35, 35);
+    outline:none;
+        }
+
+QToolTip{ 
+    background-color: black;
+    border-color: rgb(35, 35, 35);
+    padding: 2px;
+    color: white; 
+    font: "Noto Sans";
+    font-size: 14px;
+         }
+
+QPushButton{
+    background-color: black;
+    border-color:rgb(115, 115, 115);
+            }
+
+QPushButton:hover{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
+    border-color: white;
+    margin: 1px;
+                  }
+
+QToolButton{
+    background-color: #000000;
+    border-color:rgb(115, 115, 115);
+            }
+
+QToolButton:hover{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
+    border-color: white;
+    margin: 1px;
+                  }
+
+QComboBox{
+    background-color: #000000;
+    border-color:rgb(115, 115, 115);
+    height: 24px;
+          }
+
+QComboBox:hover{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
+    border-color: white;
+    margin: 1px;
+    padding-left: 3px;
+                }
+
+QComboBox::item{
+    background-color: black;
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border:none;
+    height: 25px;
+    padding-left:-5px;
+                 }
+
+QComboBox::item:selected{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: white;
+                         }
+
+QRadioButton{
+    background-color: transparent;
+    border: none
+             }
+
+QRadioButton:hover{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
+    border-color: white
+                   }
+QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+}
+QRadioButton::indicator:checked {
+    image: url(icons/radio_checked.svg)
+}
+
+QRadioButton::indicator:unchecked {
+    image: url(icons/radio_unchecked.svg)
+}
+
+QFrame{
+    background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.1 #050505, stop: 0.5 #101010, stop: 0.9 #050505, stop: 1 #000000);
+    border-color:rgb(35, 35, 35)
+       }
+
+QLabel{
+    background: transparent;
+    border:none;
+       }
