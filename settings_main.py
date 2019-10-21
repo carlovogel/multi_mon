@@ -44,8 +44,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowTitle('MultiMon Settings')
         self.setWindowIcon(QIcon(str(ICONS_DIR / 'tray_icon.svg')))
-        with open(STYLE_SHEET_DIR / 'main_settings.stylesheet', 'r') as style_sheet:
-            self.setStyleSheet(style_sheet.read())
+
         self.config = self.read_config()
         self.connected_ports_dict = self.get_connected_screen_infos()
         self.screen_count = len(self.connected_ports_dict)
@@ -63,6 +62,8 @@ class SettingsMainWindow(QtWidgets.QDialog):
         self.action_tuple = self.make_screen_type_menu()
         self.load_values_from_config_to_gui()
         self.disable_middle_screen_if_two_screens()
+        with open(STYLE_SHEET_DIR / 'main_settings.stylesheet', 'r') as style_sheet:
+            self.setStyleSheet(style_sheet.read())
 
     @staticmethod
     def read_config():
@@ -163,7 +164,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
             label_type.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
             label_type.setText(f'{position.capitalize()} screen')
             tool_button_type = QtWidgets.QToolButton(frame)
-            tool_button_type.setMinimumSize(QSize(360, 290))
+            tool_button_type.setMinimumSize(QSize(380, 300))
             tool_button_type.setCursor(QCursor(Qt.PointingHandCursor))
             tool_button_type.setIcon(QIcon(str(ICONS_DIR / 'screen.svg')))
             tool_button_type.setIconSize(QSize(270, 200))

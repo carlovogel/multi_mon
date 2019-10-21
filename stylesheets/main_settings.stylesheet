@@ -9,9 +9,11 @@ QWidget{
 
 QToolTip{ 
     background-color: black;
-    border-color: rgb(35, 35, 35);
     padding: 2px;
-    color: white; 
+    border-style: outset;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgb(115, 115, 115);
     font: "Noto Sans";
     font-size: 14px;
          }
@@ -81,14 +83,14 @@ QRadioButton:hover{
 QRadioButton::indicator {
     width: 20px;
     height: 20px;
-}
+                         }
 QRadioButton::indicator:checked {
     image: url(icons/radio_checked.svg)
-}
+                                 }
 
 QRadioButton::indicator:unchecked {
     image: url(icons/radio_unchecked.svg)
-}
+                                   }
 
 QFrame{
     background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 0.1 #050505, stop: 0.5 #101010, stop: 0.9 #050505, stop: 1 #000000);

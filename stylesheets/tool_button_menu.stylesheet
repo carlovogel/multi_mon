@@ -7,7 +7,7 @@ QMenu{
 
 QMenu::item{
     height: 50px;
-    width: 293px;
+    width: 313px;
     background-color: black;
     color: white;
     padding:30px;
