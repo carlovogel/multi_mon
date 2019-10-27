@@ -26,7 +26,7 @@ Select the port, the resolution and the refresh rate for each screen and the sid
 
 Click on “Customize MultiMon” to open the window shown below to choose which buttons you want to show up in MultiMon:
 <p align="center">
-  <img src="https://github.com/carlovogel/multi_mon/screenshots_for_readme/customize_window.png?raw=true" alt="Customize window"/>
+  <img src="/screenshots_for_readme/customize_window.png?raw=true" alt="Customize window"/>
 </p>
 ![Customize window](/screenshots_for_readme/customize_window.png)
 
