@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*
 
-import time
-
-start = time.time()
 import sys
 import subprocess
 import configparser
@@ -11,7 +8,6 @@ from pathlib import Path
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QSize
-
 
 # Xrandr flags:
 PRIMARY = '--primary'
@@ -68,7 +64,9 @@ class MultiMon(QtWidgets.QDialog):
         horizontal_layout = QtWidgets.QHBoxLayout(self)
         horizontal_layout.setContentsMargins(0, 0, 0, 0)
         horizontal_layout.setSpacing(0)
-        size_policy_transparent = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        size_policy_transparent = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+                                                        )
         self.push_button_transparent.setSizePolicy(size_policy_transparent)
         self.push_button_transparent.setFocusPolicy(Qt.NoFocus)
         self.push_button_transparent.setStyleSheet("QPushButton {background-color: transparent; border: none}")
@@ -81,13 +79,11 @@ class MultiMon(QtWidgets.QDialog):
                         'tv_mirror', 'secondary_mirror', 'secondary_only', 'secondary_2_only', 'secondary_2_extended',
                         'secondary_2_mirror', 'tv_2_only', 'tv_2_extended', 'tv_2_mirror'
                         )
-
-        tool_tips_tuple = ("Main monitor only", "Extended on secondary monitor ", "Extended on TV", "TV only",
-                           "Extended on all screens", "Mirror on TV", 'Mirror on secondary monitor',
-                           'Secondary monitor only', 'Secondary_2 monitor only', 'Extended on secondary_2 monitor',
-                           'Mirror on secondary_2 monitor', 'TV_2 only', 'Extended on TV_2', 'Mirror on TV_2'
+        tool_tips_tuple = ('Main monitor only', 'Extended on secondary monitor', 'Extended on TV', 'TV only',
+                           'Extended on all screens', 'Mirror on TV', 'Mirror on secondary monitor',
+                           'Secondary monitor only', 'Secondary 2 monitor only', 'Extended on secondary 2 monitor',
+                           'Mirror on secondary 2 monitor', 'TV 2 only', 'Extended on TV 2', 'Mirror on TV 2'
                            )
-
         icon_dir = self.get_icon_dir_name(self.screen_count, self.type_list)
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         button_count = int(self.config['Customize']['button_count'])
@@ -100,7 +96,7 @@ class MultiMon(QtWidgets.QDialog):
                 push_button.setSizePolicy(size_policy)
                 push_button.setMinimumWidth(int(300*size_factor))
                 push_button.setCursor(QCursor(Qt.PointingHandCursor))
-                push_button.setIconSize(QSize(icon_width*size_factor, icon_height*size_factor))
+                push_button.setIconSize(QSize(int(icon_width*size_factor), int(icon_height*size_factor)))
                 vertical_layout.addWidget(push_button)
                 push_button.setIcon(QIcon(str(icon_dir / f"{label}.svg")))
                 push_button.setToolTip(tool_tips_tuple[index])
@@ -139,7 +135,6 @@ class MultiMon(QtWidgets.QDialog):
             else:
                 icon_width = 240
                 icon_height = 60
-
         else:
             if tv_count:
                 icon_width = 240
@@ -171,40 +166,40 @@ class MultiMon(QtWidgets.QDialog):
     def switch_to_main_only(self):
         """Changes current mode to main screen only.
         """
-        self.screen_setup.change_to_given_mode(main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF,
-                                               secondary_pos=OFF, secondary_2_pos=OFF
+        self.screen_setup.change_to_given_mode(
+            main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=OFF
                                                )
         self.close()
 
     def switch_to_tv_only(self):
         """Changes current mode to tv only.
         """
-        self.screen_setup.change_to_given_mode(main_pos=OFF, tv_pos=PRIMARY, tv_2_pos=OFF,
-                                               secondary_pos=OFF, secondary_2_pos=OFF
+        self.screen_setup.change_to_given_mode(
+            main_pos=OFF, tv_pos=PRIMARY, tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=OFF
                                                )
         self.close()
 
     def switch_to_tv_2_only(self):
         """Changes current mode to tv_2 only.
         """
-        self.screen_setup.change_to_given_mode(main_pos=OFF, tv_pos=OFF, tv_2_pos=PRIMARY,
-                                               secondary_pos=OFF, secondary_2_pos=OFF
+        self.screen_setup.change_to_given_mode(
+            main_pos=OFF, tv_pos=OFF, tv_2_pos=PRIMARY, secondary_pos=OFF, secondary_2_pos=OFF
                                                )
         self.close()
 
     def switch_to_secondary_only(self):
         """Changes current mode to secondary only.
         """
-        self.screen_setup.change_to_given_mode(main_pos=OFF, tv_pos=OFF, tv_2_pos=OFF,
-                                               secondary_pos=PRIMARY, secondary_2_pos=OFF
+        self.screen_setup.change_to_given_mode(
+            main_pos=OFF, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=PRIMARY, secondary_2_pos=OFF
                                                )
         self.close()
 
     def switch_to_secondary_2_only(self):
         """Changes current mode to secondary_2 only.
         """
-        self.screen_setup.change_to_given_mode(main_pos=OFF, tv_pos=OFF, tv_2_pos=OFF,
-                                               secondary_pos=OFF, secondary_2_pos=PRIMARY
+        self.screen_setup.change_to_given_mode(
+            main_pos=OFF, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=PRIMARY
                                                )
         self.close()
 
@@ -213,13 +208,11 @@ class MultiMon(QtWidgets.QDialog):
         """
         if self.type_list.index('main') < self.type_list.index('secondary'):
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF,
-                    secondary_pos=(RIGHT_OF, 'main'), secondary_2_pos=OFF
+                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=(RIGHT_OF, 'main'), secondary_2_pos=OFF
                                                    )
         else:
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF,
-                    secondary_pos=(LEFT_OF, 'main'), secondary_2_pos=OFF
+                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=(LEFT_OF, 'main'), secondary_2_pos=OFF
                                                    )
         self.close()
 
@@ -228,13 +221,11 @@ class MultiMon(QtWidgets.QDialog):
         """
         if self.type_list.index('main') < self.type_list.index('tv'):
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=(RIGHT_OF, 'main'), tv_2_pos=OFF,
-                    secondary_pos=OFF, secondary_2_pos=OFF
+                    main_pos=PRIMARY, tv_pos=(RIGHT_OF, 'main'), tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=OFF
                                                    )
         else:
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=(LEFT_OF, 'main'), tv_2_pos=OFF,
-                    secondary_pos=OFF, secondary_2_pos=OFF
+                    main_pos=PRIMARY, tv_pos=(LEFT_OF, 'main'), tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=OFF
                                                    )
         self.close()
 
@@ -243,13 +234,11 @@ class MultiMon(QtWidgets.QDialog):
         """
         if self.type_list.index('main') < self.type_list.index('secondary_2'):
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF,
-                    secondary_pos=OFF, secondary_2_pos=(RIGHT_OF, 'main')
+                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=(RIGHT_OF, 'main')
                                                    )
         else:
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF,
-                    secondary_pos=OFF, secondary_2_pos=(LEFT_OF, 'main')
+                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=(LEFT_OF, 'main')
                                                    )
         self.close()
 
@@ -258,13 +247,11 @@ class MultiMon(QtWidgets.QDialog):
         """
         if self.type_list.index('main') < self.type_list.index('tv_2'):
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=(RIGHT_OF, 'main'),
-                    secondary_pos=OFF, secondary_2_pos=OFF
+                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=(RIGHT_OF, 'main'), secondary_pos=OFF, secondary_2_pos=OFF
                                                    )
         else:
             self.screen_setup.change_to_given_mode(
-                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=(LEFT_OF, 'main'),
-                    secondary_pos=OFF, secondary_2_pos=OFF
+                    main_pos=PRIMARY, tv_pos=OFF, tv_2_pos=(LEFT_OF, 'main'), secondary_pos=OFF, secondary_2_pos=OFF
                                                    )
         self.close()
 
@@ -272,8 +259,7 @@ class MultiMon(QtWidgets.QDialog):
         """Changes current mode to main screen mirrored to tv.
         """
         self.screen_setup.change_to_given_mode(
-            main_pos=PRIMARY, tv_pos=(SAME_AS, 'main'),
-            tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=OFF
+            main_pos=PRIMARY, tv_pos=(SAME_AS, 'main'), tv_2_pos=OFF, secondary_pos=OFF, secondary_2_pos=OFF
                                                )
         self.close()
 

@@ -26,7 +26,7 @@ BUTTON_LABEL_TUPLE = ('main_only', 'secondary_extended', 'tv_extended', 'tv_only
 
 
 class MyProxyStyle(QtWidgets.QProxyStyle):
-    """Changes the icon size for the screen type menu entries in the toolbutton menu.
+    """Changes the icon size for the screen type menu entries in the tool button menu.
     """
     def pixelMetric(self, pixel_metric, option=None, widget=QtWidgets.QMenu):
         if pixel_metric == QtWidgets.QStyle.PM_SmallIconSize:
@@ -44,7 +44,6 @@ class SettingsMainWindow(QtWidgets.QDialog):
         super().__init__(parent)
         self.setWindowTitle('MultiMon Settings')
         self.setWindowIcon(QIcon(str(ICONS_DIR / 'tray_icon.svg')))
-
         self.config = self.read_config()
         self.connected_ports_dict = self.get_connected_screen_infos()
         self.screen_count = len(self.connected_ports_dict)
@@ -67,7 +66,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
 
     @staticmethod
     def read_config():
-        """Initializes the config parser and reads the conf file into it if the conf file exists.
+        """Initializes the config parser and reads the conf file into it, if the conf file exists.
         Adds all sections to the config parser, if not.
         """
         config = configparser.ConfigParser()
@@ -83,7 +82,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
         {port: {resolution: rate}}
         Uses the tool Xrandr to get the information.
         """
-        with subprocess.Popen(['xrandr', '-q'], stdout=subprocess.PIPE) as proc:
+        with subprocess.Popen(('xrandr', '-q'), stdout=subprocess.PIPE) as proc:
             all_port_list = proc.stdout.readlines()
         port_dict = {}
         resolution_dict = {}
@@ -128,7 +127,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
             f'There {plural_string[0]} {self.screen_count} connected screen{plural_string[1]} detected. Not correct?\n'
             f'Check your connection and click reload connections:'
                              )
-        push_button_reload.setToolTip('Reload the window with a new connection check')
+        push_button_reload.setToolTip('Reload the window with a new connection check.')
         push_button_reload.setText('   Reload window   ')
         self.vertical_layout_main.addLayout(horizontal_layout_reload)
         return push_button_reload
@@ -199,10 +198,10 @@ class SettingsMainWindow(QtWidgets.QDialog):
             label_rate.setText('Refresh rate:')
             label_resolution.setText('Resolution:')
             label_hz.setText('Hz')
-            combo_box_port.setToolTip(f'Select the port of the {position} screen')
-            combo_box_resolution.setToolTip(f'Select the resolution of the {position} screen')
-            combo_box_rate.setToolTip(f'Select the refresh rate of the {position} screen')
-            tool_button_type.setToolTip(f'Select the type of the {position} screen')
+            combo_box_port.setToolTip(f'Select the port of the {position} screen.')
+            combo_box_resolution.setToolTip(f'Select the resolution of the {position} screen.')
+            combo_box_rate.setToolTip(f'Select the refresh rate of the {position} screen.')
+            tool_button_type.setToolTip(f'Select the type of the {position} screen.')
 
             grid_layout_combo = QtWidgets.QGridLayout()
             grid_layout_combo.setContentsMargins(0, 10, 0, 0)
@@ -261,10 +260,10 @@ class SettingsMainWindow(QtWidgets.QDialog):
         horizontal_layout_mode.addWidget(radio_button_right_mode)
 
         label_mode.setText('Where on your screen do you want to show MultiMon?')
-        radio_button_left_mode.setToolTip('MultiMon shows up on the left edge of the screen')
         radio_button_left_mode.setText('Left edge')
-        radio_button_right_mode.setToolTip('MultiMon shows up on the right edge of the screen')
+        radio_button_left_mode.setToolTip('MultiMon shows up on the left edge of the screen.')
         radio_button_right_mode.setText('Right edge')
+        radio_button_right_mode.setToolTip('MultiMon shows up on the right edge of the screen.')
 
         self.vertical_layout_main.addLayout(horizontal_layout_mode)
 
@@ -283,7 +282,6 @@ class SettingsMainWindow(QtWidgets.QDialog):
         push_button_start.setCursor(QCursor(Qt.PointingHandCursor))
         push_button_customize = QtWidgets.QPushButton(self)
         push_button_customize.setMinimumSize(QSize(0, 60))
-
         push_button_customize.setFont(FONT)
         push_button_customize.setCursor(QCursor(Qt.PointingHandCursor))
 
@@ -322,7 +320,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
 
     def make_screen_type_menu(self):
         """Returns a tuple of dictionaries {screen_type: action} for each screen, where the actions
-        are associated to the screen type entries of the toolbutton menus.
+        are associated to the screen type entries of the tool button menus.
         """
         menu_entries_tuple = ()
         with open(STYLE_SHEET_DIR / 'tool_button_menu.stylesheet', 'r') as style_sheet_file:
@@ -359,15 +357,14 @@ class SettingsMainWindow(QtWidgets.QDialog):
                 self.set_screen_type(screen_nr, self.config['Screens'][f'type_screen_{screen_nr}'].strip('_2'))
             except KeyError:
                 pass
-
-            try:
-                mode_edge = self.config['Mode']['edge']
-            except KeyError:
-                mode_edge = ''
-            if mode_edge == 'left':
-                self.mode_radio_button_tuple[0].setChecked(True)
-            else:
-                self.mode_radio_button_tuple[1].setChecked(True)
+        try:
+            mode_edge = self.config['Mode']['edge']
+        except KeyError:
+            mode_edge = ''
+        if mode_edge == 'left':
+            self.mode_radio_button_tuple[0].setChecked(True)
+        else:
+            self.mode_radio_button_tuple[1].setChecked(True)
 
     @staticmethod
     def get_more_detailed_port_tuple(port_tuple):
@@ -397,7 +394,8 @@ class SettingsMainWindow(QtWidgets.QDialog):
             self.widget_dict_tuple[1]['rate'].clear()
 
     def load_port_entries(self, screen_nr, tuple_port_labels):
-        """Loads the tuple of labels of all connected ports to the port combo box of the screen with the given screen nr.
+        """Loads the given tuple of labels of all connected ports to the port combo box of the screen with the given
+        screen nr.
         """
         for mon in tuple_port_labels:
             self.widget_dict_tuple[screen_nr]['port'].addItem(mon)
@@ -550,15 +548,15 @@ class SettingsMainWindow(QtWidgets.QDialog):
             return False
         return True
 
-    def check_if_setup_changed(self, screen_count, new_tv_count):
+    def check_if_setup_changed(self, new_screen_count, new_tv_count):
         """Returns True if either the screen count or the tv count is different then the value loaded from the config 
         parser. Returns False if they haven't changed.
         """
         try:
-            old_screen_count = (self.config['Screens']['screen_count'])
+            old_screen_count = int(self.config['Screens']['screen_count'])
         except KeyError:
             old_screen_count = 0
-        if old_screen_count != screen_count or self.tv_count != new_tv_count:
+        if (old_screen_count != new_screen_count) or (self.tv_count != new_tv_count):
             return True
         else:
             return False
@@ -607,7 +605,9 @@ class SettingsMainWindow(QtWidgets.QDialog):
         for index, screen_type in enumerate(screen_types_tuple):
             total_count = screen_types_tuple.count(screen_type)
             counter = screen_types_tuple[:index].count(screen_type)
-            new_screen_types_tuple += ((screen_type + '_' + str(counter + 1),) if total_count > 1 and counter > 0 else (screen_type,))
+            new_screen_types_tuple += (
+                (screen_type + '_' + str(counter + 1),) if total_count > 1 and counter > 0 else (screen_type,)
+                                       )
         return new_screen_types_tuple
 
     def one_screen_warning(self):
@@ -619,7 +619,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
 class CustomizeWindow(QtWidgets.QDialog):
     """Window to select the buttons to show up in MultiMon.
     """
-    def __init__(self, parent=None, config = None):
+    def __init__(self, parent=None, config=None):
         super().__init__(parent)
         self.setWindowTitle('Customize MultiMon')
         with open(STYLE_SHEET_DIR / 'customize.stylesheet', 'r') as style_sheet:
@@ -761,8 +761,8 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     my_style = MyProxyStyle()
     app.setStyle(my_style)
-    main.settings_main = SettingsMainWindow()
-    main.settings_main.show()
+    settings_main = SettingsMainWindow()
+    settings_main.show()
     sys.exit(app.exec_())
 
 
