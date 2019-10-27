@@ -28,7 +28,6 @@ Click on “Customize MultiMon” to open the window shown below to choose which
 <p align="center">
   <img src="/screenshots_for_readme/customize_window.png?raw=true" alt="Customize window"/>
 </p>
-![Customize window](/screenshots_for_readme/customize_window.png)
 
 ## Usage:
 
