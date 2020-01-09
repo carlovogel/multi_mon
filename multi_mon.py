@@ -448,8 +448,15 @@ class ScreenSetup(object):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    tool = MultiMon()
-    tool.showFullScreen()
+    conf_file = Path(__file__).parent / 'multi_mon_conf.conf'
+    if conf_file.is_file():
+        tool = MultiMon()
+        tool.showFullScreen()
+    else:
+        from settings_main import WarningWindow
+        warning_window = WarningWindow()
+        warning_window.label_warning.setText("Run settings_main.py and save your settings to create a conf file.")
+        warning_window.show()
     sys.exit(app.exec_())
 
 
