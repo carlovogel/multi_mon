@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*
 
 import sys
+import os
 import subprocess
 import configparser
 from pathlib import Path
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QSize
+
+CONF_FILE = Path(__file__).parent / 'multi_mon_conf.conf'
 
 # Xrandr flags:
 PRIMARY = '--primary'
@@ -17,6 +20,22 @@ RIGHT_OF = '--right-of'
 SAME_AS = '--same-as'
 
 
+def desktop_environment_decorator(func):
+    """Decorator to run additional commands for specific desktop environments. (KDE plasma and cinnamon supported yet)
+    """
+    def desktop_environment_wrapper(*args_mode, **kwargs_mode_screen_type):
+        if os.environ.get('KDE_FULL_SESSION') == 'true':
+            subprocess.run("qdbus org.kde.KWin /Compositor suspend", shell=True)
+            func(*args_mode, **kwargs_mode_screen_type)
+            subprocess.run("qdbus org.kde.KWin /Compositor resume", shell=True)
+        if os.environ.get('DESKTOP_SESSION') == 'cinnamon':
+            func(*args_mode, **kwargs_mode_screen_type)
+            subprocess.run("killall cinnamon", shell=True)
+        else:
+            func(*args_mode, **kwargs_mode_screen_type)
+    return desktop_environment_wrapper
+
+
 class MultiMon(QtWidgets.QDialog):
     """Tool to choose the multi monitor mode.
     """
@@ -24,7 +43,7 @@ class MultiMon(QtWidgets.QDialog):
 
         super().__init__(parent)
         self.config = configparser.ConfigParser()
-        self.config.read(Path(__file__).parent / 'multi_mon_conf.conf')
+        self.config.read(CONF_FILE)
         self.screen_count = int(self.config['Screens']['screen_count'])
         self.tv_count = int(self.config['Screens']['tv_count'])
         self.setWindowIcon(QIcon(str(Path(__file__).parent / 'icons' / 'tray_icon.svg')))
@@ -328,7 +347,7 @@ class ScreenSetup(object):
                     if tuple_active_screens_ports[1] == self.get_port_for_given_type(screen_type):
                         if desktop_width == total_width_screens:
                             return f'{screen_type}_extended'
-                        if desktop_width == QtWidgets.QDesktopWidget().screenGeometry().width():
+                        if desktop_width == list_active_screens[0].geometry().width():
                             return f'{screen_type}_mirror'
 
             if active_screen_count == 3 and desktop_width == total_width_screens:
@@ -376,6 +395,7 @@ class ScreenSetup(object):
                 command += self.get_part_of_command_for_given_monitor(mode, *tuple_screen[:3])
         return command
 
+    @desktop_environment_decorator
     def change_to_given_mode(self, *args_mode, **kwargs_mode_screen_type):
         """Changes the current monitor setup to the new monitor setup with xrandr. Takes the wished mode
         of each screen either as positional arguments ordered from the left screen to the right screen or as keyword
@@ -395,8 +415,10 @@ class ScreenSetup(object):
             kwargs_mode_screen_type = self.allow_call_by_type_kwargs(**kwargs_mode_screen_type)
 
         command = self.get_full_command_for_given_mode(*args_mode, **kwargs_mode_screen_type)
+        
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
             log_xrandr = proc.stdout.readlines()
+
         if log_xrandr:
             print(log_xrandr)
             return False
@@ -446,19 +468,36 @@ class ScreenSetup(object):
         return None
 
 
+
+
+
+def open_settings(app):
+    import settings_main
+    action_icon_style = settings_main.ProxyStyleBiggerMenuIcons()
+    app.setStyle(action_icon_style)
+    settings_window = settings_main.SettingsMainWindow()
+    warning_window = settings_main.WarningWindow(settings_window)
+    warning_window.label_warning.setText(
+        'No configuration file found! Configure your settings in the \n'
+        'following window and confirm to create a configuration file.'
+                                         )
+    warning_window.push_button_ok.clicked.connect(settings_window.show)
+    warning_window.move(QCursor().pos())
+    warning_window.show()
+    sys.exit(app.exec_())
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    conf_file = Path(__file__).parent / 'multi_mon_conf.conf'
-    if conf_file.is_file():
+    if CONF_FILE.is_file():
         tool = MultiMon()
         tool.showFullScreen()
+        sys.exit(app.exec_())
     else:
-        from settings_main import WarningWindow
-        warning_window = WarningWindow()
-        warning_window.label_warning.setText("Run settings_main.py and save your settings to create a conf file.")
-        warning_window.show()
-    sys.exit(app.exec_())
+        open_settings(app)
 
 
 if __name__ == '__main__':
     main()
+
+

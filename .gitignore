@@ -1,4 +1,5 @@
 multi_mon_conf.conf
 .idea/
 __pycache__/
+.directory
 

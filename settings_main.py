@@ -8,7 +8,6 @@ from pathlib import Path
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QCursor, QFont
-from multi_mon import MultiMon
 
 CONF_FILE = Path(__file__).parent / 'multi_mon_conf.conf'
 ICONS_DIR = Path(__file__).parent / 'icons'
@@ -25,7 +24,7 @@ BUTTON_LABEL_TUPLE = ('main_only', 'secondary_extended', 'tv_extended', 'tv_only
                       )
 
 
-class MyProxyStyle(QtWidgets.QProxyStyle):
+class ProxyStyleBiggerMenuIcons(QtWidgets.QProxyStyle):
     """Changes the icon size for the screen type menu entries in the tool button menu.
     """
     def pixelMetric(self, pixel_metric, option=None, widget=QtWidgets.QMenu):
@@ -43,7 +42,7 @@ class SettingsMainWindow(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle('MultiMon Settings')
-        self.setWindowIcon(QIcon(str(ICONS_DIR / 'tray_icon.svg')))
+        self.setWindowIcon(QIcon(str(ICONS_DIR / 'icon_settings.svg')))
         self.config = self.read_config()
         self.connected_ports_dict = self.get_connected_screen_infos()
         self.screen_count = len(self.connected_ports_dict)
@@ -62,7 +61,12 @@ class SettingsMainWindow(QtWidgets.QDialog):
         self.load_values_from_config_to_gui()
         self.disable_middle_screen_if_two_screens()
         with open(STYLE_SHEET_DIR / 'main_settings.stylesheet', 'r') as style_sheet:
-            self.setStyleSheet(style_sheet.read())
+            self.setStyleSheet(style_sheet.read().replace(
+                    'unchecked_icon_file', str(ICONS_DIR / 'radio_unchecked.svg')
+                                                          ).replace(
+                'checked_icon_file', str(ICONS_DIR / 'radio_checked.svg')
+                                                                    )
+                               )
 
     @staticmethod
     def read_config():
@@ -639,6 +643,7 @@ class CustomizeWindow(QtWidgets.QDialog):
         """Initializes and places the selection buttons. Returns a dict with all available buttons depending on the
         setup chosen in the main settings window as values and their labels as keys.
         """
+        from multi_mon import MultiMon
         grid_layout_selection = QtWidgets.QGridLayout()
         grid_layout_selection.setSpacing(20)
         screen_count = int(self.config['Screens']['screen_count'])
@@ -740,13 +745,14 @@ class WarningWindow(QtWidgets.QDialog):
     """
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowIcon(QIcon(str(ICONS_DIR / 'exit.svg')))
+        self.setWindowIcon(QIcon.fromTheme('documentinfo'))
+        self.setWindowTitle('Attention')
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setContentsMargins(10, 10, 10, 10)
         self.verticalLayout.setSpacing(20)
         self.push_button_ok = QtWidgets.QPushButton(self)
-        self.push_button_ok.setMinimumSize(QSize(50, 40))
-        self.push_button_ok.setText('   Ok   ')
+        self.push_button_ok.setMinimumSize(QSize(110, 45))
+        self.push_button_ok.setText('Ok')
         self.push_button_ok.setFont(FONT)
         self.push_button_ok.setCursor(QCursor(Qt.PointingHandCursor))
         self.label_warning = QtWidgets.QLabel(self)
@@ -759,8 +765,8 @@ class WarningWindow(QtWidgets.QDialog):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    my_style = MyProxyStyle()
-    app.setStyle(my_style)
+    action_icon_style = ProxyStyleBiggerMenuIcons()
+    app.setStyle(action_icon_style)
     settings_main = SettingsMainWindow()
     settings_main.show()
     sys.exit(app.exec_())

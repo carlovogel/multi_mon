@@ -73,23 +73,25 @@ QComboBox::item:selected{
 
 QRadioButton{
     background-color: transparent;
-    border: none
+    border: 1px solid transparent
              }
 
 QRadioButton:hover{
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #000000, stop: 0.5 #050505, stop: 0.95 #121212, stop: 1 #262626);
-    border-color: white
+    background-color: transparent;
+    border: 1px solid grey;
                    }
 QRadioButton::indicator {
     width: 20px;
     height: 20px;
                          }
+                         
+                                 
 QRadioButton::indicator:checked {
-    image: url(icons/radio_checked.svg)
+    image: url(checked_icon_file)
                                  }
 
 QRadioButton::indicator:unchecked {
-    image: url(icons/radio_unchecked.svg)
+    image: url(unchecked_icon_file)
                                    }
 
 QFrame{
